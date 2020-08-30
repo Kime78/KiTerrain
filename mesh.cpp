@@ -6,15 +6,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
-float perlinize(float x, float z) {
+float perlinize(float x, float z, FastNoise& perlin) {
     float r;
-    FastNoise perlin;
-    perlin.SetFrequency(0.03);
-    perlin.SetSeed(rand() % 100000);
-    perlin.SetNoiseType(FastNoise::Simplex);
-
     r = perlin.GetNoise(x, z);
-    return r;
+    return r * 5;
 }
 glm::vec3 random_color() {
     int x1, x2, x3;
@@ -29,42 +24,19 @@ glm::vec3 random_color() {
     return glm::vec3(x, y, z);
 }
 void Mesh::push_coords(float x, float z, int idx) {
-    float y = 0;
-    if (p[idx].x == x && p[idx].z == z)
-        y = p[idx].y;
-    else
-        y = perlinize(x, z);
+    float y;
+    y = perlinize(x, z, perlin);
 
     mesh.push_back(glm::vec3(x, y, z));
     // mesh.push_back(color);
-
-    p[idx].x = x;
-    p[idx].y = y;
-    p[idx].z = z;
 }
 void Mesh::generate_mesh(std::uint64_t x_size,
                          std::uint64_t z_size,
                          bool optimisation) {
-    //-1 1   |\
-    //1 -1   | \
-    //-1 -1  |__\
-
-    //-1 1    ___
-    // 1 1     \ |
-    // 1 -1     \|
-
-    // 1 1          /|
-    // 1 -1        / |
-    //-1 -1      /__|
-
-    //-1 1      ___
-    // 1 1       | /
-    //-1 -1     |/
-
     if (optimisation) {
         for (int x = 1; x <= x_size; x += 2) {
             for (int z = 1; z <= z_size; z += 2) {
-                float y         = perlinize(x, z);
+                float y         = perlinize(x, z, perlin);
                 float param     = 0.5;
                 glm::vec3 color = random_color();
 
@@ -72,54 +44,54 @@ void Mesh::generate_mesh(std::uint64_t x_size,
                 mesh.push_back(glm::vec3(x - param, y, z + param));
                 mesh.push_back(color);
 
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3(x + param, y, z - param));
                 mesh.push_back(color);
 
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3(x - param, y, z - param));
                 mesh.push_back(color);
 
                 color = random_color();
                 // triangle 2
 
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3(x - param, y, z + param));
                 mesh.push_back(color);
 
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3(x + param, y, z + param));
                 mesh.push_back(color);
 
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3(x + param, y, z - param));
                 mesh.push_back(color);
 
                 color = random_color();
                 // triangle 3
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) + param, y, (z + 1) + param));
                 mesh.push_back(color);
 
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) + param, y, (z + 1) - param));
                 mesh.push_back(color);
 
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) - param, y, (z + 1) - param));
                 mesh.push_back(color);
 
                 color = random_color();
                 // triangle 4
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) - param, y, (z + 1) + param));
                 mesh.push_back(color);
 
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) + param, y, (z + 1) + param));
                 mesh.push_back(color);
 
-                y = perlinize(x, z);
+                y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) - param, y, (z + 1) - param));
                 mesh.push_back(color);
             }
@@ -132,10 +104,10 @@ void Mesh::generate_mesh(std::uint64_t x_size,
 
                 // this will be a func uwu
                 // triangle 1
-                
+
                 push_coords(x - param, z + param, 1);
                 mesh.push_back(color);
-                
+
                 push_coords(x + param, z - param, 2);
                 mesh.push_back(color);
 
@@ -165,6 +137,10 @@ void Mesh::draw() {
 }
 
 Mesh::Mesh() {
+    perlin.SetFrequency(0.03);
+    perlin.SetSeed(rand() % 32000);
+    perlin.SetNoiseType(FastNoise::Simplex);
+
     this->generate_mesh(100, 100, 0);
     GLuint vao;
     glGenVertexArrays(1, &vao);
