@@ -1,29 +1,27 @@
 #include "shader.hpp"
+
+#include "glad.h"
 #include <fstream>
-#include <glad/glad.h>
-std::string Shader::open_shader(std::string path)
-{
+std::string Shader::open_shader(std::string path) {
     std::string data;
     std::string res;
     std::ifstream fin(path.c_str(), std::ios::in);
-    while(!fin.eof())
-    {
+    while (!fin.eof()) {
         fin >> data;
         res += data;
-        if(data == "core")
+        if (data == "core")
             res += '\n';
         res += " ";
     }
-        
+
     return res;
 }
-Shader::Shader()
-{
+Shader::Shader() {
     {
-        shaderProgram = glCreateProgram();
-        std::string vert = open_shader("./base.vert");
-        std::string frag = open_shader("./base.frag");
-        const GLchar* vertex_source = vert.c_str();
+        shaderProgram                 = glCreateProgram();
+        std::string vert              = open_shader("./base.vert");
+        std::string frag              = open_shader("./base.frag");
+        const GLchar* vertex_source   = vert.c_str();
         const GLchar* fragment_source = frag.c_str();
 
         // Create and compile the vertex shader
@@ -37,20 +35,23 @@ Shader::Shader()
         glCompileShader(fragmentShader);
 
         // Link the vertex and fragment shader into a shader program
-    
+
         glAttachShader(shaderProgram, vertexShader);
         glAttachShader(shaderProgram, fragmentShader);
         glBindFragDataLocation(shaderProgram, 0, "outColor");
         glLinkProgram(shaderProgram);
         glUseProgram(shaderProgram);
 
-    // Specify the layout of the vertex data
+        // Specify the layout of the vertex data
         GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
         glEnableVertexAttribArray(posAttrib);
-        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0); //to be changed
+        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE,
+                              6 * sizeof(float), 0);   // to be changed
 
         GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
         glEnableVertexAttribArray(colAttrib);
-        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))); //to be changed
+        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE,
+                              6 * sizeof(float),
+                              (void*)(3 * sizeof(float)));   // to be changed
     }
 }
