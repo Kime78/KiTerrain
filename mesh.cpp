@@ -28,7 +28,8 @@ void Mesh::push_coords(float x, float z, int idx) {
     y = perlinize(x, z, perlin);
 
     mesh.push_back(glm::vec3(x, y, z));
-    // mesh.push_back(color);
+    glm::vec3 color = {0.2f, y / 5, 0.6f};
+    mesh.push_back(color);
 }
 void Mesh::generate_mesh(std::uint64_t x_size,
                          std::uint64_t z_size,
@@ -42,58 +43,58 @@ void Mesh::generate_mesh(std::uint64_t x_size,
 
                 // this will be a func uwu
                 mesh.push_back(glm::vec3(x - param, y, z + param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3(x + param, y, z - param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3(x - param, y, z - param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 color = random_color();
                 // triangle 2
 
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3(x - param, y, z + param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3(x + param, y, z + param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3(x + param, y, z - param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 color = random_color();
                 // triangle 3
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) + param, y, (z + 1) + param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) + param, y, (z + 1) - param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) - param, y, (z + 1) - param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 color = random_color();
                 // triangle 4
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) - param, y, (z + 1) + param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) + param, y, (z + 1) + param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 y = perlinize(x, z, perlin);
                 mesh.push_back(glm::vec3((x + 1) - param, y, (z + 1) - param));
-                mesh.push_back(color);
+                //mesh.push_back(color);
             }
         }
     } else {
@@ -106,25 +107,25 @@ void Mesh::generate_mesh(std::uint64_t x_size,
                 // triangle 1
 
                 push_coords(x - param, z + param, 1);
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 push_coords(x + param, z - param, 2);
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 push_coords(x - param, z - param, 3);
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 // triangle 2
-                color = random_color();
+                //color = random_color();
 
                 push_coords(x - param, z + param, 4);
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 push_coords(x + param, z + param, 5);
-                mesh.push_back(color);
+                //mesh.push_back(color);
 
                 push_coords(x + param, z - param, 6);
-                mesh.push_back(color);
+                //mesh.push_back(color);
             }
         }
     }
