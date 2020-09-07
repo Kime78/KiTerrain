@@ -9,7 +9,7 @@
 float perlinize(float x, float z, FastNoise& perlin) {
     float r;
     r = perlin.GetNoise(x, z);
-    return r * 5;
+    return r * 6;
 }
 glm::vec3 random_color() {
     int x1, x2, x3;
@@ -29,6 +29,7 @@ void Mesh::push_coords(float x, float z, int idx) {
 
     mesh.push_back(glm::vec3(x, y, z));
     glm::vec3 color = {0.2f, y / 5, 0.6f};
+    //color = random_color();
     mesh.push_back(color);
 }
 void Mesh::generate_mesh(std::uint64_t x_size,
@@ -140,8 +141,8 @@ void Mesh::draw() {
 Mesh::Mesh() {
     perlin.SetFrequency(0.03);
     perlin.SetSeed(rand() % 32000);
-    perlin.SetNoiseType(FastNoise::Simplex);
-
+    perlin.SetNoiseType(FastNoise::SimplexFractal);
+    perlin.SetFractalOctaves(5);
     this->generate_mesh(100, 100, 0);
     GLuint vao;
     glGenVertexArrays(1, &vao);
